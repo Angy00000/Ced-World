@@ -108,10 +108,10 @@
 
   /* ---------- Hero ---------- */
   .hero{
-    position:relative; min-height:100svh; display:flex; align-items:center;
-    padding:150px 0 90px; overflow:hidden;
+    position:relative; min-height:100svh; display:flex; align-items:flex-start;
+    padding:170px 0 100px; overflow:hidden;
     background:
-      linear-gradient(110deg, var(--navy-950) 0%, rgba(6,11,26,0.86) 30%, rgba(6,11,26,0.58) 48%, rgba(6,11,26,0.32) 65%, rgba(6,11,26,0.08) 85%, transparent 100%),
+      linear-gradient(100deg, var(--navy-950) 0%, var(--navy-950) 42%, rgba(6,11,26,0.85) 56%, rgba(6,11,26,0.52) 72%, rgba(6,11,26,0.18) 88%, transparent 100%),
       var(--hero-bg-image) 78% 65% / cover no-repeat,
       var(--navy-900);
   }
@@ -120,9 +120,12 @@
     background: radial-gradient(ellipse 1100px 720px at 88% 40%, rgba(76,124,240,0.16), transparent 65%);
   }
   .meridians{display:none;}
-  .hero-grid{position:relative; z-index:2;}
+  .hero-grid{position:relative; z-index:2; width:100%; margin:auto 0;}
   .hero-visual{display:none;}
   .hero-inner{max-width:620px;}
+  .hero h1, .hero .lede, .hero .hero-sectors .pill{
+    text-shadow:0 2px 18px rgba(4,8,20,0.85), 0 1px 2px rgba(4,8,20,0.9);
+  }
   @media (max-width:780px){
     .hero{
       background:
@@ -136,7 +139,11 @@
   }
   .hero h1 em{font-style:italic; font-weight:400; color:var(--blue-300);}
   .hero .lede{
-    margin-top:26px; max-width:560px; color:var(--steel); font-size:1.08rem; line-height:1.65;
+    margin-top:26px; max-width:560px; color:#DCE3F5; font-size:1.08rem; line-height:1.65;
+  }
+  .hero-sectors .pill{
+    background:rgba(6,11,26,0.45); border-color:rgba(246,248,253,0.28); color:#E7ECFA;
+    backdrop-filter:blur(6px);
   }
   .hero-actions{display:flex; flex-wrap:wrap; gap:14px; margin-top:40px;}
   .btn{
