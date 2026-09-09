@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CED WORLD — Espace images</title>
+<meta name="robots" content="noindex, nofollow">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy-950:#060B1A; --navy-900:#0A1330; --navy-800:#101C46;
+    --blue-500:#2B5FE0; --blue-400:#4C7CF0; --blue-300:#8FADF7;
+    --white:#F6F8FD; --steel:#9CA8CC; --steel-dim:#71809F;
+    --line:rgba(246,248,253,0.14); --danger:#E0523F;
+    --serif:'Fraunces', serif; --sans:'IBM Plex Sans', sans-serif;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0; background:var(--navy-900); color:var(--white); font-family:var(--sans); line-height:1.5;}
+  .wrap{max-width:920px; margin:0 auto; padding:0 24px;}
+  header{padding:28px 0; border-bottom:1px solid var(--line);}
+  header .wrap{display:flex; align-items:center; justify-content:space-between;}
+  header h1{font-family:var(--serif); font-weight:500; font-size:1.4rem; margin:0;}
+  header span{color:var(--steel); font-size:0.85rem;}
+
+  #gate{min-height:100vh; display:flex; align-items:center; justify-content:center; padding:24px;}
+  .gate-card{
+    background:var(--navy-800); border:1px solid var(--line); border-radius:8px;
+    padding:44px; max-width:380px; width:100%; text-align:center;
+  }
+  .gate-card h2{font-family:var(--serif); font-weight:500; margin:0 0 8px;}
+  .gate-card p{color:var(--steel); font-size:0.9rem; margin:0 0 24px;}
+  .gate-card input{
+    width:100%; background:var(--navy-900); border:1px solid var(--line); border-radius:4px;
+    padding:13px 14px; color:var(--white); font-size:1rem; margin-bottom:14px; text-align:center;
+  }
+  .gate-card button{width:100%;}
+  .gate-error{color:var(--danger); font-size:0.85rem; margin-top:10px; min-height:1.2em;}
+
+  main{display:none; padding:48px 0 100px;}
+  main.open{display:block;}
+  section{margin-bottom:64px;}
+  section h2{font-family:var(--serif); font-weight:500; font-size:1.5rem; margin:0 0 6px;}
+  section .desc{color:var(--steel); font-size:0.92rem; margin-bottom:28px;}
+
+  .pole-row{
+    display:flex; gap:20px; align-items:center; padding:18px 0; border-top:1px solid var(--line);
+    flex-wrap:wrap;
+  }
+  .pole-row:first-of-type{border-top:none;}
+  .pole-thumb{
+    width:96px; height:72px; border-radius:6px; background:var(--navy-800); border:1px solid var(--line);
+    flex-shrink:0; overflow:hidden; display:flex; align-items:center; justify-content:center;
+    color:var(--steel-dim); font-size:0.7rem; text-align:center;
+  }
+  .pole-thumb img{width:100%; height:100%; object-fit:cover;}
+  .pole-info{flex:1; min-width:180px;}
+  .pole-info strong{display:block; font-size:1rem;}
+  .pole-info span{color:var(--steel-dim); font-size:0.8rem;}
+  .pole-actions{display:flex; gap:10px; align-items:center;}
+
+  input[type=file]{
+    color:var(--steel); font-size:0.85rem; max-width:200px;
+  }
+  button, .btn{
+    background:var(--blue-500); color:#fff; border:none; border-radius:4px;
+    padding:11px 18px; font-size:0.9rem; font-weight:600; cursor:pointer; font-family:inherit;
+    transition:background 0.15s ease;
+  }
+  button:hover{background:var(--blue-400);}
+  button:disabled{background:var(--steel-dim); cursor:not-allowed;}
+  .btn-danger{background:transparent; border:1px solid var(--line); color:var(--danger); padding:8px 12px;}
+  .btn-danger:hover{background:rgba(224,82,63,0.12);}
+
+  .status{font-size:0.82rem; margin-left:4px;}
+  .status.ok{color:#4CD07A;}
+  .status.err{color:var(--danger);}
+
+  .gallery-add{
+    display:flex; gap:12px; flex-wrap:wrap; align-items:center; background:var(--navy-800);
+    border:1px solid var(--line); border-radius:8px; padding:20px; margin-bottom:24px;
+  }
+  .gallery-add input[type=text]{
+    flex:1; min-width:180px; background:var(--navy-900); border:1px solid var(--line); border-radius:4px;
+    padding:11px 12px; color:var(--white); font-family:inherit; font-size:0.9rem;
+  }
+  .gallery-grid{
+    display:grid; grid-template-columns:repeat(auto-fill, minmax(160px, 1fr)); gap:16px;
+  }
+  .g-item{
+    position:relative; border-radius:6px; overflow:hidden; background:var(--navy-800); border:1px solid var(--line);
+  }
+  .g-item img{width:100%; height:130px; object-fit:cover; display:block;}
+  .g-item figcaption{padding:8px 10px; font-size:0.78rem; color:var(--steel);}
+  .g-item .del{
+    position:absolute; top:8px; right:8px; width:28px; height:28px; border-radius:50%;
+    background:rgba(6,11,26,0.75); border:none; color:#fff; font-size:1rem; line-height:1; padding:0;
+  }
+  .empty-note{color:var(--steel-dim); font-size:0.88rem; padding:16px 0;}
+</style>
+</head>
+<body>
+
+<div id="gate">
+  <div class="gate-card">
+    <h2>CED WORLD</h2>
+    <p>Espace de gestion des images du site</p>
+    <input type="password" id="pwd" placeholder="Mot de passe" autofocus>
+    <button id="pwdBtn" style="width:100%;">Entrer</button>
+    <div class="gate-error" id="gateError"></div>
+  </div>
+</div>
+
+<main id="main">
+  <header>
+    <div class="wrap">
+      <h1>CED WORLD — Images</h1>
+      <span>Espace privé</span>
+    </div>
+  </header>
+
+  <div class="wrap">
+
+    <section>
+      <h2>Images des pôles d'activité</h2>
+      <p class="desc">Une photo par pôle. Elle remplace l'illustration par défaut sur le site.</p>
+      <div id="polesList"></div>
+    </section>
+
+    <section>
+      <h2>Galerie</h2>
+      <p class="desc">Ajoute autant de photos que tu veux. Elles s'affichent dans la section "Galerie" du site (elle apparaît automatiquement dès la première image).</p>
+      <div class="gallery-add">
+        <input type="file" id="galFile" accept="image/*">
+        <input type="text" id="galCaption" placeholder="Légende (optionnel)">
+        <button id="galAddBtn">Ajouter</button>
+        <span class="status" id="galAddStatus"></span>
+      </div>
+      <div class="gallery-grid" id="galleryGrid"></div>
+    </section>
+
+  </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  // ── Configuration (mêmes valeurs que dans index.html) ──
+  var SUPABASE_URL = "__SUPABASE_URL__";
+  var SUPABASE_ANON_KEY = "__SUPABASE_ANON_KEY__";
+  var ADMIN_PASSWORD = "__ADMIN_PASSWORD__";
+  var BUCKET = "ced-world";
+
+  var sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  var POLES = [
+    {slot:'technologie', label:'Technologie & Digital'},
+    {slot:'immobilier', label:'Immobilier'},
+    {slot:'auto_moto', label:'Automobile & Moto'},
+    {slot:'agriculture', label:'Agriculture'},
+    {slot:'elevage', label:'Élevage'}
+  ];
+
+  // ── Accès ──
+  document.getElementById('pwdBtn').addEventListener('click', tryLogin);
+  document.getElementById('pwd').addEventListener('keydown', function(e){ if(e.key === 'Enter') tryLogin(); });
+
+  function tryLogin(){
+    var val = document.getElementById('pwd').value;
+    if(val === ADMIN_PASSWORD){
+      sessionStorage.setItem('cedworld_admin', '1');
+      openAdmin();
+    }else{
+      document.getElementById('gateError').textContent = "Mot de passe incorrect.";
+    }
+  }
+
+  function openAdmin(){
+    document.getElementById('gate').style.display = 'none';
+    document.getElementById('main').classList.add('open');
+    renderPoles();
+    renderGallery();
+  }
+
+  if(sessionStorage.getItem('cedworld_admin') === '1'){ openAdmin(); }
+
+  // ── Pôles ──
+  async function renderPoles(){
+    var list = document.getElementById('polesList');
+    var res = await sb.from('pole_images').select('slot,image_url');
+    var current = {};
+    (res.data || []).forEach(function(r){ current[r.slot] = r.image_url; });
+
+    list.innerHTML = POLES.map(function(p){
+      var img = current[p.slot];
+      return '' +
+        '<div class="pole-row" data-slot="' + p.slot + '">' +
+          '<div class="pole-thumb">' + (img ? '<img src="' + img + '">' : 'Aucune image') + '</div>' +
+          '<div class="pole-info"><strong>' + p.label + '</strong><span>' + p.slot + '</span></div>' +
+          '<div class="pole-actions">' +
+            '<input type="file" accept="image/*" class="pole-file">' +
+            '<button class="pole-upload">Mettre à jour</button>' +
+            '<span class="status"></span>' +
+          '</div>' +
+        '</div>';
+    }).join('');
+
+    list.querySelectorAll('.pole-row').forEach(function(row){
+      row.querySelector('.pole-upload').addEventListener('click', function(){
+        uploadPoleImage(row);
+      });
+    });
+  }
+
+  async function uploadPoleImage(row){
+    var slot = row.getAttribute('data-slot');
+    var fileInput = row.querySelector('.pole-file');
+    var statusEl = row.querySelector('.status');
+    var btn = row.querySelector('.pole-upload');
+    var file = fileInput.files[0];
+    if(!file){ statusEl.textContent = 'Choisis une image'; statusEl.className = 'status err'; return; }
+
+    btn.disabled = true; statusEl.textContent = 'Envoi...'; statusEl.className = 'status';
+    try{
+      var ext = file.name.split('.').pop();
+      var path = 'poles/' + slot + '-' + Date.now() + '.' + ext;
+      var up = await sb.storage.from(BUCKET).upload(path, file, {upsert:true});
+      if(up.error) throw up.error;
+      var pub = sb.storage.from(BUCKET).getPublicUrl(path);
+      var url = pub.data.publicUrl;
+      var upd = await sb.from('pole_images').upsert({slot:slot, image_url:url, updated_at:new Date().toISOString()});
+      if(upd.error) throw upd.error;
+      statusEl.textContent = 'Mis à jour ✓'; statusEl.className = 'status ok';
+      renderPoles();
+    }catch(e){
+      statusEl.textContent = 'Erreur : ' + (e.message || e);
+      statusEl.className = 'status err';
+    }finally{
+      btn.disabled = false;
+    }
+  }
+
+  // ── Galerie ──
+  document.getElementById('galAddBtn').addEventListener('click', addGalleryImage);
+
+  async function addGalleryImage(){
+    var fileInput = document.getElementById('galFile');
+    var captionInput = document.getElementById('galCaption');
+    var statusEl = document.getElementById('galAddStatus');
+    var btn = document.getElementById('galAddBtn');
+    var file = fileInput.files[0];
+    if(!file){ statusEl.textContent = 'Choisis une image'; statusEl.className = 'status err'; return; }
+
+    btn.disabled = true; statusEl.textContent = 'Envoi...'; statusEl.className = 'status';
+    try{
+      var ext = file.name.split('.').pop();
+      var path = 'gallery/' + Date.now() + '-' + Math.round(Math.random()*1000) + '.' + ext;
+      var up = await sb.storage.from(BUCKET).upload(path, file);
+      if(up.error) throw up.error;
+      var pub = sb.storage.from(BUCKET).getPublicUrl(path);
+      var url = pub.data.publicUrl;
+
+      var existing = await sb.from('gallery').select('sort_order').order('sort_order', {ascending:false}).limit(1);
+      var nextOrder = (existing.data && existing.data.length) ? existing.data[0].sort_order + 1 : 0;
+
+      var ins = await sb.from('gallery').insert({
+        image_url: url,
+        caption: captionInput.value.trim() || null,
+        sort_order: nextOrder
+      });
+      if(ins.error) throw ins.error;
+
+      statusEl.textContent = 'Ajouté ✓'; statusEl.className = 'status ok';
+      fileInput.value = ''; captionInput.value = '';
+      renderGallery();
+    }catch(e){
+      statusEl.textContent = 'Erreur : ' + (e.message || e);
+      statusEl.className = 'status err';
+    }finally{
+      btn.disabled = false;
+    }
+  }
+
+  async function renderGallery(){
+    var grid = document.getElementById('galleryGrid');
+    var res = await sb.from('gallery').select('id,image_url,caption').order('sort_order', {ascending:true});
+    var data = res.data || [];
+    if(data.length === 0){
+      grid.innerHTML = '<p class="empty-note">Aucune image pour l\'instant.</p>';
+      return;
+    }
+    grid.innerHTML = data.map(function(item){
+      return '' +
+        '<figure class="g-item" data-id="' + item.id + '">' +
+          '<button class="del" title="Supprimer">×</button>' +
+          '<img src="' + item.image_url + '">' +
+          (item.caption ? '<figcaption>' + item.caption + '</figcaption>' : '') +
+        '</figure>';
+    }).join('');
+
+    grid.querySelectorAll('.del').forEach(function(delBtn){
+      delBtn.addEventListener('click', async function(){
+        var fig = delBtn.closest('.g-item');
+        var id = fig.getAttribute('data-id');
+        if(!confirm('Supprimer cette image ?')) return;
+        await sb.from('gallery').delete().eq('id', id);
+        renderGallery();
+      });
+    });
+  }
+</script>
+
+</body>
+</html>
